@@ -6,8 +6,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Container, Row, Col, Button } from "reactstrap";
 import { useState } from "react";
 import { addUser, deleteUser } from "../Features/UserSlice";
-import { registerUser } from "../Features/UserSlice";
-import { useNavigate } from "react-router-dom";
 const Register = () => {
   const userList = useSelector((state) => state.users.value);
   //For form validation using react-hook-form
@@ -29,7 +27,6 @@ const Register = () => {
 
   // Handle form submission
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const onSubmit = (data) => {
     try {
@@ -38,10 +35,9 @@ const Register = () => {
         email: data.email,
         password: data.password,
       };
-      dispatch(registerUser(userData));
+      dispatch(addUser(userData));
       console.log("Form Data", data); // You can handle the form submission here
       alert("Validation all good.");
-      navigate("/login");
     } catch (error) {
       console.log(error);
     }
@@ -139,6 +135,40 @@ const Register = () => {
           </table>
         </Col>
       </Row> */}
+
+      <Col md={6}>
+        <h2>List of Users</h2>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <td>Name</td>
+              <td>Password</td>
+              <td>Actions</td>
+            </tr>
+          </thead>
+          <tbody>
+            {userList.map((user) => (
+              <tr key={user.email}>
+                <td>{user.name}</td>
+
+                <td>{user.email}</td>
+
+                <td>{user.password}</td>
+                <td>
+                  <Button>Update</Button>
+                </td>
+
+                <td>
+                  <Button onClick={() => handleDelete(user.email)}>
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Col>
     </Container>
   );
 };
